@@ -1,5 +1,8 @@
 const { resolve } = require('path')
 const webpack = require('webpack')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin')
 const pkgInfo = require('./package.json')
@@ -24,6 +27,7 @@ const config = require('./config/' + (process.env.npm_config_config || 'default'
 
 module.exports = {
   mode: dev ? 'development' : 'production',
+  devtool: dev ? 'cheap-module-eval-source-map' : 'hidden-source-map',
 
   entry,
 
@@ -31,12 +35,20 @@ module.exports = {
     runtimeChunk: true,
     splitChunks: {
       chunks: 'all'
-    }
+    },
+    minimizer: dev ? [] : [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true
+      }),
+      new OptimizeCSSAssetsPlugin()
+    ]
   },
 
   output: {
     path: resolve(__dirname, 'dist'),
-    filename: dev ? '[name].js' : '[name].[chunkhash].js',
+    filename: dev ? '[name].js' : '[id].[chunkhash].js',
     chunkFilename: '[chunkhash].js'
   },
 
@@ -63,7 +75,7 @@ module.exports = {
 
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
       },
 
       {
@@ -94,16 +106,23 @@ module.exports = {
   },
 
   plugins: [
-    ...htmlPlugins,
-    new HtmlWebpackIncludeSiblingChunksPlugin(),
-
-    new webpack.HashedModuleIdsPlugin(),
-
     new webpack.DefinePlugin({
       DEBUG: dev,
       VERSION: JSON.stringify(pkgInfo.version),
       CONFIG: JSON.stringify(config.runtimeConfig)
-    })
+    }),
+
+    new webpack.HashedModuleIdsPlugin(),
+
+    new MiniCssExtractPlugin({
+      filename: '[contenthash].css',
+      chunkFilename: '[contenthash].css'
+    }),
+
+    // place before htmlPlugins
+    new HtmlWebpackIncludeSiblingChunksPlugin(),
+
+    ...htmlPlugins
   ],
 
   resolve: {
