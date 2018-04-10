@@ -1,6 +1,6 @@
 {
   "name": "html-webpack-include-sibling-chunks-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "HtmlWebpackIncludeSiblingChunksPlugin.js",
   "scripts": {
