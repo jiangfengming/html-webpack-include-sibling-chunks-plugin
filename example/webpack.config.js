@@ -119,7 +119,7 @@ module.exports = {
       chunkFilename: '[contenthash].css'
     }),
 
-    // place before htmlPlugins
+    // must be placed before html-webpack-plugin
     new HtmlWebpackIncludeSiblingChunksPlugin(),
 
     ...htmlPlugins

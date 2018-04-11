@@ -15,16 +15,16 @@ Suppose your MPA has the following structure (check the [example](example) folde
 │   ├── shared
 |   ├── favicon.png
 │   └── pages
-|       ├── foo
+|       ├── foo                      // http://localhost:8080/foo.html
 |       |    ├── index.html
 |       |    ├── index.js
 |       |    ├── style.css
 |       |    └── pic.png
-|       └── bar
+|       └── bar                      // http://localhost:8080/bar.html
 |           ├── index.html
 |           ├── index.js
 |           ├── style.css
-|           └── baz
+|           └── baz                  // http://localhost:8080/bar/baz.html
 |               ├── index.html
 |               ├── index.js
 |               └── style.css
@@ -63,11 +63,10 @@ module.exports = {
   },
 
   plugins: [
-    ...htmlPlugins,
-
-    new HtmlWebpackIncludeSiblingChunksPlugin(),
-
     // ...
+    // must be placed before html-webpack-plugin
+    new HtmlWebpackIncludeSiblingChunksPlugin(),
+    ...htmlPlugins
   ]
 
   // ...
