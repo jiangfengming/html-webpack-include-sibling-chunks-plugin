@@ -1,4 +1,9 @@
 class HtmlWebpackIncludeSiblingChunksPlugin {
+  toMap (map, item) {
+    map[item.id] = item
+    return map
+  }
+
   apply(compiler) {
     compiler.hooks.emit.tap('HtmlWebpackIncludeSiblingChunksPlugin', compilation => {
       const chunkOnlyConfig = {
@@ -17,11 +22,11 @@ class HtmlWebpackIncludeSiblingChunksPlugin {
         version: false
       }
 
-      const allChunks = compilation.getStats().toJson(chunkOnlyConfig).chunks
+      const allChunks = compilation.getStats().toJson(chunkOnlyConfig).chunks.reduce(this.toMap, Object.create(null))
 
       compilation.hooks.htmlWebpackPluginAlterChunks.tap('HtmlWebpackIncludeSiblingChunksPlugin', chunks => {
-        const ids = [].concat(...chunks.map(chunk => [chunk.id, ...chunk.siblings]))
-        return allChunks.filter(chunk => ids.includes(chunk.id))
+        const ids = [].concat(...chunks.map(chunk => [...chunk.siblings, chunk.id]))
+        return ids.map((id) => allChunks[id])
       })
     })
   }
