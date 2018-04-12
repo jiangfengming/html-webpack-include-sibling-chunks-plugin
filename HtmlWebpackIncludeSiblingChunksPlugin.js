@@ -1,5 +1,5 @@
 class HtmlWebpackIncludeSiblingChunksPlugin {
-  toMap (map, item) {
+  toMap(map, item) {
     map[item.id] = item
     return map
   }
@@ -26,7 +26,7 @@ class HtmlWebpackIncludeSiblingChunksPlugin {
 
       compilation.hooks.htmlWebpackPluginAlterChunks.tap('HtmlWebpackIncludeSiblingChunksPlugin', chunks => {
         const ids = [].concat(...chunks.map(chunk => [...chunk.siblings, chunk.id]))
-        return ids.map((id) => allChunks[id])
+        return ids.map(id => allChunks[id])
       })
     })
   }
