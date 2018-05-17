@@ -36,16 +36,20 @@ You can bundle the site using this webpack config: (check the full file: [exampl
 ```js
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackIncludeSiblingChunksPlugin = require('html-webpack-include-sibling-chunks-plugin')
-
 const glob = require('glob')
+
+const dev = Boolean(process.env.WEBPACK_SERVE)
+
 const entries = glob.sync('./src/**/index.js')
 const entry = {}
 const htmlPlugins = []
 for (const path of entries) {
+  const template = path.replace('index.js', 'index.html')
   const chunkName = path.slice('./src/pages/'.length, -'/index.js'.length)
-  entry[chunkName] = path
+  // in order to hot reload in dev, we put template file into the entry
+  entry[chunkName] = dev ? [path, template] : path
   htmlPlugins.push(new HtmlWebpackPlugin({
-    template: path.replace('index.js', 'index.html'),
+    template,
     filename: chunkName + '.html',
     chunksSortMode: 'none',
     chunks: [chunkName]
