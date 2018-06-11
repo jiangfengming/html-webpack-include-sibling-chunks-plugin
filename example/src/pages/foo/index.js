@@ -1,10 +1,9 @@
 /* eslint no-console: "off" */
 
-import $ from 'jquery'
 import './style.css'
 
-$('pre').text(`
+document.querySelector('pre').textContent = `
 DEBUG: ${DEBUG}
 VERSION: ${VERSION}
 CONFIG: ${JSON.stringify(CONFIG)}
-`)
+`

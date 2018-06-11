@@ -1,6 +1,6 @@
 {
   "name": "html-webpack-include-sibling-chunks-plugin",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "main": "HtmlWebpackIncludeSiblingChunksPlugin.js",
   "scripts": {
@@ -20,8 +20,9 @@
   },
   "homepage": "https://github.com/fenivana/html-webpack-include-sibling-chunks-plugin#readme",
   "devDependencies": {
+    "babel-eslint": "^8.2.3",
     "eslint": "^4.19.1",
-    "eslint-config-enough": "^0.3.0"
+    "eslint-config-enough": "^0.3.3"
   },
   "eslintConfig": {
     "extends": "enough",
